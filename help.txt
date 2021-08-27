@@ -1,0 +1,13 @@
+tetris
+
+size
+    10x21
+
+layout
+time    score   level
+
+
+hold    board   next
+
+
+----progress bar----

@@ -412,6 +412,11 @@ function is_point_inside_rect(x, y,w,h, px, py)
     y2=y
     return is_point_inside_coordinates(x1,y1,x2,y2,px,py)
 }
-function percent(v, p) {
+function percent(v, p,v_max)
+{
+    if(v_max!=undefined)
+        if(v>v_max)
+            v=v_max
+    
     return v * p / 100;
 }

@@ -36,12 +36,133 @@ function setup() {
                 this.mode=_mode
             }
         },
-        board:
+        hold:
         {
-            x: percent(displayWidth, 20),
-            y: percent(displayHeight, 15),
-            w: percent(displayWidth, 60),
-            h: percent(displayHeight, 70),
+            x: percent(windowWidth, 2.5),
+            y: percent(windowHeight, 15),
+            w: percent(windowWidth, 15),
+            h: percent(windowWidth, 15) * 1.5,
+            spacing: 0,
+            get_cell_size: function () {
+                // return 20
+                return this.w / 5
+
+            },
+            draw: function () {
+                //draw hold piece
+                fill("white")
+                rect(this.x, this.y, this.w, this.h, 4)
+
+                if (tetris.board.saved_shape != SHAPE_EMPTY) {
+
+                    let _piece = PIECE_TO_USE[tetris.board.saved_shape + UP]
+                    _piece.forEach((row, i) => {
+                        row.forEach((cell, j) => {
+                            if (cell != EMPTY) {
+                                let _x = (j * (this.get_cell_size() + this.spacing))
+                                let _y = (i * (this.get_cell_size() + this.spacing))
+                                let _r = 2
+                                let _offset_x = this.x + (this.get_cell_size() / 2)
+                                let _offset_y = this.y + (this.get_cell_size() * 2)
+
+                                //background
+                                fill(CELL_COLOR_CODE[1].b)
+                                noStroke()
+                                rect(_x + _offset_x, _y + _offset_y, this.get_cell_size(), this.get_cell_size())
+
+                                //triangle shadow
+                                fill(CELL_COLOR_CODE[1].s)
+                                noStroke()
+                                beginShape(TRIANGLES);
+                                vertex(_x + _offset_x, _y + _offset_y);
+                                vertex(_x + _offset_x, _y + _offset_y + this.get_cell_size());
+                                vertex(_x + _offset_x + this.get_cell_size(), _y + _offset_y + this.get_cell_size());
+                                endShape();
+
+                                //small rect
+                                fill(CELL_COLOR_CODE[1].r)
+                                noStroke()
+                                rect(_x + _offset_x + this.get_cell_size() * 0.2, _y + _offset_y + this.get_cell_size() * 0.2, this.get_cell_size() * 0.6, this.get_cell_size() * 0.6)
+
+
+
+                                // rect(_x + _offset_x, _y + _offset_y, this.get_cell_size(), this.get_cell_size(), 2)
+                            }
+                        });
+                    });
+                }
+
+
+
+            }
+        },
+        next:
+        {
+            x: windowWidth - percent(windowWidth, 17.5),
+            y: percent(windowHeight, 15),
+            w: percent(windowWidth, 15),
+            h: percent(windowWidth, 15) * 1.5,
+            r: 2,
+            spacing: 0,
+            get_cell_size: function () {
+                // return 20
+                return this.w / 5
+
+            },
+            draw: function () {
+                //draw hold piece
+                fill("white")
+                rect(this.x, this.y, this.w, this.h, 4)
+
+                if (tetris.board.next_shape != SHAPE_EMPTY) {
+
+                    let _piece = PIECE_TO_USE[tetris.board.next_shape + UP]
+                    _piece.forEach((row, i) => {
+                        row.forEach((cell, j) => {
+                            if (cell != EMPTY) {
+                                let _x = (j * (this.get_cell_size() + this.spacing))
+                                let _y = (i * (this.get_cell_size() + this.spacing))
+                                let _r = 2
+                                let _offset_x = this.x + (this.get_cell_size() / 2)
+                                let _offset_y = this.y + (this.get_cell_size() * 2)
+
+                                //background
+                                fill(CELL_COLOR_CODE[1].b)
+                                noStroke()
+                                rect(_x + _offset_x, _y + _offset_y, this.get_cell_size(), this.get_cell_size())
+
+                                //triangle shadow
+                                fill(CELL_COLOR_CODE[1].s)
+                                noStroke()
+                                beginShape(TRIANGLES);
+                                vertex(_x + _offset_x, _y + _offset_y);
+                                vertex(_x + _offset_x, _y + _offset_y + this.get_cell_size());
+                                vertex(_x + _offset_x + this.get_cell_size(), _y + _offset_y + this.get_cell_size());
+                                endShape();
+
+                                //small rect
+                                fill(CELL_COLOR_CODE[1].r)
+                                noStroke()
+                                rect(_x + _offset_x + this.get_cell_size() * 0.2, _y + _offset_y + this.get_cell_size() * 0.2, this.get_cell_size() * 0.6, this.get_cell_size() * 0.6)
+
+
+
+                                // rect(_x + _offset_x, _y + _offset_y, this.get_cell_size(), this.get_cell_size(), 2)
+                            }
+                        });
+                    });
+                }
+            }
+        }
+    }
+
+    //handle board and gameplay
+    tetris.board=
+        {
+            x: percent(windowWidth, 20),
+            y: percent(windowHeight, 15),
+            w: percent(windowWidth, 60),
+            h: percent(windowHeight, 70),
             r: 4,
             rows: 21,//top to bottom count
             cols: 10,//left to right count
@@ -423,161 +544,46 @@ function setup() {
 
             }
         },
-        hold:
-        {
-            x: percent(displayWidth, 2.5),
-            y: percent(displayHeight, 15),
-            w: percent(displayWidth, 15),
-            h: percent(displayWidth, 15) * 1.5,
-            spacing: 0,
-            get_cell_size: function () {
-                // return 20
-                return this.w / 5
-
-            },
-            draw: function () {
-                //draw hold piece
-                fill("white")
-                rect(this.x, this.y, this.w, this.h, 4)
-
-                if (tetris.board.saved_shape != SHAPE_EMPTY) {
-
-                    let _piece = PIECE_TO_USE[tetris.board.saved_shape + UP]
-                    _piece.forEach((row, i) => {
-                        row.forEach((cell, j) => {
-                            if (cell != EMPTY) {
-                                let _x = (j * (this.get_cell_size() + this.spacing))
-                                let _y = (i * (this.get_cell_size() + this.spacing))
-                                let _r = 2
-                                let _offset_x = this.x + (this.get_cell_size() / 2)
-                                let _offset_y = this.y + (this.get_cell_size() * 2)
-
-                                //background
-                                fill(CELL_COLOR_CODE[1].b)
-                                noStroke()
-                                rect(_x + _offset_x, _y + _offset_y, this.get_cell_size(), this.get_cell_size())
-
-                                //triangle shadow
-                                fill(CELL_COLOR_CODE[1].s)
-                                noStroke()
-                                beginShape(TRIANGLES);
-                                vertex(_x + _offset_x, _y + _offset_y);
-                                vertex(_x + _offset_x, _y + _offset_y + this.get_cell_size());
-                                vertex(_x + _offset_x + this.get_cell_size(), _y + _offset_y + this.get_cell_size());
-                                endShape();
-
-                                //small rect
-                                fill(CELL_COLOR_CODE[1].r)
-                                noStroke()
-                                rect(_x + _offset_x + this.get_cell_size() * 0.2, _y + _offset_y + this.get_cell_size() * 0.2, this.get_cell_size() * 0.6, this.get_cell_size() * 0.6)
 
 
 
-                                // rect(_x + _offset_x, _y + _offset_y, this.get_cell_size(), this.get_cell_size(), 2)
-                            }
-                        });
-                    });
-                }
+    //handle scoring board
+    tetris.score=
+    {
+        x: percent(windowWidth, 20),
+        y: 0,
+        w: percent(windowWidth, 60),
+        h: percent(windowHeight, 15),
+        animate_score_limit: 0,
+        draw: function () {
+            fill(COLORS.GRAY_100)
+            rect(this.x, this.y, this.w, this.h, 20)
+            fill("#111")
+            textSize(32);
+            textAlign(CENTER);
+            if (this.animate_score_limit > tetris.board.score)
+                tetris.board.score++
+            else
+                this.animate_score_limit = 0
 
 
+            text(tetris.board.score, this.x + this.w / 2, this.y + this.h / 2);
 
-            }
-        },
-        next:
-        {
-            x: displayWidth - percent(displayWidth, 17.5),
-            y: percent(displayHeight, 15),
-            w: percent(displayWidth, 15),
-            h: percent(displayWidth, 15) * 1.5,
-            r: 2,
-            spacing: 0,
-            get_cell_size: function () {
-                // return 20
-                return this.w / 5
-
-            },
-            draw: function () {
-                //draw hold piece
-                fill("white")
-                rect(this.x, this.y, this.w, this.h, 4)
-
-                if (tetris.board.next_shape != SHAPE_EMPTY) {
-
-                    let _piece = PIECE_TO_USE[tetris.board.next_shape + UP]
-                    _piece.forEach((row, i) => {
-                        row.forEach((cell, j) => {
-                            if (cell != EMPTY) {
-                                let _x = (j * (this.get_cell_size() + this.spacing))
-                                let _y = (i * (this.get_cell_size() + this.spacing))
-                                let _r = 2
-                                let _offset_x = this.x + (this.get_cell_size() / 2)
-                                let _offset_y = this.y + (this.get_cell_size() * 2)
-
-                                //background
-                                fill(CELL_COLOR_CODE[1].b)
-                                noStroke()
-                                rect(_x + _offset_x, _y + _offset_y, this.get_cell_size(), this.get_cell_size())
-
-                                //triangle shadow
-                                fill(CELL_COLOR_CODE[1].s)
-                                noStroke()
-                                beginShape(TRIANGLES);
-                                vertex(_x + _offset_x, _y + _offset_y);
-                                vertex(_x + _offset_x, _y + _offset_y + this.get_cell_size());
-                                vertex(_x + _offset_x + this.get_cell_size(), _y + _offset_y + this.get_cell_size());
-                                endShape();
-
-                                //small rect
-                                fill(CELL_COLOR_CODE[1].r)
-                                noStroke()
-                                rect(_x + _offset_x + this.get_cell_size() * 0.2, _y + _offset_y + this.get_cell_size() * 0.2, this.get_cell_size() * 0.6, this.get_cell_size() * 0.6)
+            textSize(18);
+            fill(COLORS.PURPLE_500)
+            text(tetris.board.lines, this.x + this.w / 2, this.y + this.h / 2 + 20);
+            textSize(16);
+            fill(COLORS.GREEN_500)
+            text(tetris.board.level, this.x + this.w / 2, this.y + this.h / 2 + 40);
 
 
-
-                                // rect(_x + _offset_x, _y + _offset_y, this.get_cell_size(), this.get_cell_size(), 2)
-                            }
-                        });
-                    });
-                }
-            }
-        },
-        score:
-        {
-            x: percent(displayWidth, 20),
-            y: 0,
-            w: percent(displayWidth, 60),
-            h: percent(displayHeight, 15),
-            animate_score_limit: 0,
-            draw: function () {
-                fill(COLORS.GRAY_100)
-                rect(this.x, this.y, this.w, this.h, 20)
-                fill("#111")
-                textSize(32);
-                textAlign(CENTER);
-                if (this.animate_score_limit > tetris.board.score)
-                    tetris.board.score++
-                else
-                    this.animate_score_limit = 0
-
-
-                text(tetris.board.score, this.x + this.w / 2, this.y + this.h / 2);
-
-                textSize(18);
-                fill(COLORS.PURPLE_500)
-                text(tetris.board.lines, this.x + this.w / 2, this.y + this.h / 2 + 20);
-                textSize(16);
-                fill(COLORS.GREEN_500)
-                text(tetris.board.level, this.x + this.w / 2, this.y + this.h / 2 + 40);
-
-
-            }
         }
     }
-
+    //handle 3 min game mode
     tetris.timer=
     {
         x: tetris.board.x,
-        y: tetris.board.h+(tetris.board.get_cell_size()*4),
+        y: tetris.board.y+tetris.board.h+tetris.board.get_cell_size(),
         w: tetris.board.w,
         h: 10,
         value:0,
@@ -597,7 +603,8 @@ function setup() {
 
     }
 
-    createCanvas(displayWidth, displayHeight);
+    createCanvas(windowWidth, windowHeight);
+    console.log("canvasW,canvasH",windowWidth,windowHeight)
 
     // tetris.board.matrix[8][5]=FILLED
     
@@ -613,7 +620,7 @@ function setup() {
     });
 
     hammer_obj.on('swipeup swipedown swipeleft swiperight tap', (event) => {
-        console.log(event.type)
+        //console.log(event.type)
         if (tetris.game.state == RUNNING) {
             switch (event.type) {
                 case "swipeleft":
@@ -627,7 +634,7 @@ function setup() {
                     tetris.board.rotate_player()
                     break;
                 case "swipedown":
-                    tetris.board.move_player(0, 1)
+                    //tetris.board.move_player(0, 1)
                     break;
             }
         }
@@ -747,16 +754,29 @@ function touchMoved()
             }
             //reset moved to achieve threshold again
             handle_swipe_lr.start=handle_swipe_lr.end
-            
         }
+        
+        let dy=(handle_swipe_lr.start.y-handle_swipe_lr.end.y)
+        if(Math.abs(dy)>handle_swipe_lr.threshold/2)
+        {
+            // console.log("dy",dy)
+            if(dy<0)
+            {
+                console.log("moving down",dy)
+                tetris.board.move_player(0,1)
+            }
+            //reset moved to achieve threshold again
+            handle_swipe_lr.start=handle_swipe_lr.end
+        }
+        
     }
 }
 function touchEnded()
 {
-    if(handle_swipe_lr.start!=null && handle_swipe_lr.end!=null)
-    {
-        console.log(handle_swipe_lr.start.x-handle_swipe_lr.end.x)
-    }
+    // if(handle_swipe_lr.start!=null && handle_swipe_lr.end!=null)
+    // {
+    //     console.log(handle_swipe_lr.start.x-handle_swipe_lr.end.x)
+    // }
 }
 
 

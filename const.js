@@ -2,7 +2,7 @@ const RUNNING = 1 //game is running
 const NEVER_STARTED = 2 //game was never started
 const PAUSED = 3 //game was running now paused
 const OVER = 4 // game was player now over
-const MODE_ENDLESS=1,MODE_TIMED=2
+const MODE_ENDLESS = 1, MODE_TIMED = 2
 const NO_LINES = 0, SINGLE = 1, DOUBLE = 2, TRIPLE = 3, TETRIS = 4;
 const
     SHAPE_EMPTY = 0,
@@ -51,6 +51,38 @@ const KEY_LEFT = 37,
 
 const EMPTY = 0,
     FILLED = 1;
+
+
+const LEVEL_SPEED = []
+LEVEL_SPEED[1] = 48
+LEVEL_SPEED[2] = 43
+LEVEL_SPEED[3] = 38
+LEVEL_SPEED[4] = 33
+LEVEL_SPEED[5] = 28
+LEVEL_SPEED[6] = 23
+LEVEL_SPEED[7] = 18
+LEVEL_SPEED[8] = 13
+LEVEL_SPEED[9] = 8
+LEVEL_SPEED[10] = 5
+LEVEL_SPEED[11] = 5
+LEVEL_SPEED[12] = 5
+LEVEL_SPEED[13] = 4
+LEVEL_SPEED[14] = 4
+LEVEL_SPEED[15] = 4
+LEVEL_SPEED[16] = 3
+LEVEL_SPEED[17] = 3
+LEVEL_SPEED[18] = 3
+LEVEL_SPEED[19] = 2
+LEVEL_SPEED[20] = 2
+LEVEL_SPEED[21] = 2
+LEVEL_SPEED[22] = 2
+LEVEL_SPEED[23] = 2
+LEVEL_SPEED[24] = 2
+LEVEL_SPEED[25] = 2
+LEVEL_SPEED[26] = 2
+LEVEL_SPEED[27] = 2
+LEVEL_SPEED[28] = 2
+LEVEL_SPEED[29] = 1
 
 const COLORS =
 {
@@ -395,28 +427,25 @@ Array.prototype.remove = function () {
 
 
 //check if point inside rect
-function is_point_inside_coordinates(x1, y1, x2,y2, x, y)
-{
+function is_point_inside_coordinates(x1, y1, x2, y2, x, y) {
     if (x > x1 && x < x2 && y > y1 && y < y2)
         return true;
 
     return false;
 }
 
-function is_point_inside_rect(x, y,w,h, px, py)
-{
-    let x1,y1,x2,y2
-    x1=x
-    y1=x1+h
-    x2=x+w
-    y2=y
-    return is_point_inside_coordinates(x1,y1,x2,y2,px,py)
+function is_point_inside_rect(x, y, w, h, px, py) {
+    let x1, y1, x2, y2
+    x1 = x
+    y1 = x1 + h
+    x2 = x + w
+    y2 = y
+    return is_point_inside_coordinates(x1, y1, x2, y2, px, py)
 }
-function percent(v, p,v_max)
-{
-    if(v_max!=undefined)
-        if(v>v_max)
-            v=v_max
-    
+function percent(v, p, v_max) {
+    if (v_max != undefined)
+        if (v > v_max)
+            v = v_max
+
     return v * p / 100;
 }

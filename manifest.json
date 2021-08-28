@@ -3,7 +3,7 @@
   "display": "standalone",
   "name": "P5_TETRIS",
   "short_name": "P5T",
-  "start_url": "/",
+  "start_url": "https://hotdudehvfun.github.io/p5_tetris/",
   "scope": "/",
   "lang": "en",
   "description": "Tetris game made with p5 library",

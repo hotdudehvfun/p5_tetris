@@ -65,12 +65,12 @@ function setup() {
                                 let _offset_y = this.y + (this.get_cell_size() * 2)
 
                                 //background
-                                fill(CELL_COLOR_CODE[1].b)
+                                fill(tetris.board.save_shape_color.b)
                                 noStroke()
                                 rect(_x + _offset_x, _y + _offset_y, this.get_cell_size(), this.get_cell_size())
 
                                 //triangle shadow
-                                fill(CELL_COLOR_CODE[1].s)
+                                fill(tetris.board.save_shape_color.s)
                                 noStroke()
                                 beginShape(TRIANGLES);
                                 vertex(_x + _offset_x, _y + _offset_y);
@@ -79,7 +79,7 @@ function setup() {
                                 endShape();
 
                                 //small rect
-                                fill(CELL_COLOR_CODE[1].r)
+                                fill(tetris.board.save_shape_color.r)
                                 noStroke()
                                 rect(_x + _offset_x + this.get_cell_size() * 0.2, _y + _offset_y + this.get_cell_size() * 0.2, this.get_cell_size() * 0.6, this.get_cell_size() * 0.6)
 
@@ -156,46 +156,48 @@ function setup() {
     }
 
     //handle board and gameplay
-    tetris.board =
+    tetris.board={}
+    tetris.board.y= percent(windowHeight, 15)
+    tetris.board.w= percent(windowWidth, 60)
+    tetris.board.h= percent(windowHeight, 70)
+    tetris.board.r= 4
+    tetris.board.rows= 21//top to bottom count
+    tetris.board.cols= 10//left to right count
+    tetris.board.get_cell_size= function ()
     {
-        x: percent(windowWidth, 20),
-        y: percent(windowHeight, 15),
-        w: percent(windowWidth, 60),
-        h: percent(windowHeight, 70),
-        r: 4,
-        rows: 21,//top to bottom count
-        cols: 10,//left to right count
-        get_cell_size: function () {
-            return this.w / this.cols
-        },
-        spacing: 0,
-        ungrabbed_bag: [
+        return parseInt(Math.min(30,this.w / this.cols))
+    }
+    tetris.board.x= percent(windowWidth,50)-(tetris.board.get_cell_size()*tetris.board.cols*0.5),
+        tetris.board.spacing= 0
+        tetris.board.ungrabbed_bag= [
             SHAPE_O,
             SHAPE_I,
             SHAPE_S,
             SHAPE_Z,
             SHAPE_L,
             SHAPE_J,
-            SHAPE_T],
-        matrix: [...Array(21)].map(e => Array(10).fill(EMPTY)),
-        shape: SHAPE_T,
-        saved_shape: SHAPE_EMPTY,
-        allow_shape_save: true,
-        next_shape: SHAPE_EMPTY,
-        rotation: UP,
-        player_x: 5,//track horizontal pos in matrix from top left corner of piece
-        player_y: 0,//track vertical pos in matrix from top left corner of piece,
-        player_color: CELL_COLOR_CODE[1],
-        score: 0,
-        lines: 0,
-        level: 1,
-        streak: 1,
-        lines_counter_for_level: 0,
-        save_shape: function () {
+            SHAPE_T]
+        tetris.board.matrix= [...Array(21)].map(e => Array(10).fill(EMPTY))
+        tetris.board.shape= SHAPE_T
+        tetris.board.saved_shape= SHAPE_EMPTY
+        tetris.board.save_shape_color=CELL_COLOR_CODE[1]
+        tetris.board.allow_shape_save= true
+        tetris.board.next_shape= SHAPE_EMPTY
+        tetris.board.rotation= UP
+        tetris.board.player_x= 5//track horizontal pos in matrix from top left corner of piece
+        tetris.board.player_y= 0//track vertical pos in matrix from top left corner of piece
+        tetris.board.player_color= CELL_COLOR_CODE[1]
+        tetris.board.score= 0
+        tetris.board.lines= 0
+        tetris.board.level= 1
+        tetris.board.streak= 1
+        tetris.board.lines_counter_for_level= 0
+        tetris.board.save_shape= function () {
             if (this.allow_shape_save) {
                 if (this.saved_shape == SHAPE_EMPTY) {
                     //save shape if slot is empty
                     this.saved_shape = this.shape
+                    this.save_shape_color=this.player_color
                     this.reset_piece()
                     this.allow_shape_save = false
                 } else {
@@ -205,10 +207,11 @@ function setup() {
                     this.saved_shape = _save_shape
                     this.reset_piece(this.shape)
                     this.allow_shape_save = false
+                    this.player_color=this.save_shape_color
                 }
             }
-        },
-        get_last_bottom_cell_row_num: function () {
+        }
+        tetris.board.get_last_bottom_cell_row_num= function () {
             for (let index = PIECE_TO_USE[this.shape + this.rotation].length - 1; index >= 0; index--) {
                 let row = PIECE_TO_USE[this.shape + this.rotation][index]
                 if (row.indexOf(FILLED) != -1) {
@@ -216,8 +219,8 @@ function setup() {
                     return index;
                 }
             }
-        },
-        move_player: function (step_x, step_y) {
+        }
+        tetris.board.move_player= function (step_x, step_y) {
             let _player_save_x = this.player_x
             let _player_save_y = this.player_y
 
@@ -261,8 +264,6 @@ function setup() {
                                     console.log("GAME OVER")
                                     tetris.game.state = OVER
                                     document.querySelector("#menu").style.display = "flex"
-
-
                                 }
 
                                 this.player_x = _player_save_x
@@ -284,8 +285,8 @@ function setup() {
             }
 
 
-        },
-        rotate_player: function () {
+        }
+        tetris.board.rotate_player= function () {
             //save old piece
             let _rotation_save = this.rotation;
 
@@ -322,8 +323,8 @@ function setup() {
                 this.rotation = _rotation_save
             }
 
-        },
-        check_for_lines: function () {
+        }
+        tetris.board.check_for_lines= function () {
             //
             let _matrix_save = this.matrix
             let _count = 0;
@@ -342,8 +343,8 @@ function setup() {
             //calculate score
             this.update_score(_count)
 
-        },
-        update_score: function (_count) {
+        }
+        tetris.board.update_score= function (_count) {
             let _points = 0;
             if (_count == NO_LINES) {
                 //reset combo
@@ -351,9 +352,9 @@ function setup() {
             } else {
                 this.streak++
             }
-            let _index = _count
-            this.shape == SHAPE_T ? _index += SHAPE_T : 1
-            _points = POINTS_BAG[_index] * this.level * this.streak
+            let _index = _count;
+            this.shape == SHAPE_T ? _index += SHAPE_T : 1;
+            _points = POINTS_BAG[_index] * this.level * this.streak;
             this.streak > 1 ? _points *= COMBO : 1;
             //set score
             tetris.score.animate_score_limit = this.score + _points
@@ -385,8 +386,8 @@ function setup() {
                 }
             }
 
-        },
-        freeze_piece: function () {
+        }
+        tetris.board.freeze_piece= function () {
             PIECE_TO_USE[this.shape + this.rotation].forEach((row, i) => {
                 row.forEach((cell, j) => {
                     if (cell != EMPTY) {
@@ -404,8 +405,8 @@ function setup() {
             //reset piece
             this.reset_piece()
 
-        },
-        grab_bag_algo: function () {
+        }
+        tetris.board.grab_bag_algo= function () {
             if (this.ungrabbed_bag.length == 0) {
                 this.ungrabbed_bag = [
                     SHAPE_O,
@@ -419,8 +420,8 @@ function setup() {
             let _piece = random(this.ungrabbed_bag)
             this.ungrabbed_bag = this.ungrabbed_bag.remove(_piece)
             return _piece;
-        },
-        reset_piece: function () {
+        }
+        tetris.board.reset_piece= function () {
             this.player_x = 4
             this.player_y = 0
             //override grab_bag if saved piece is being used
@@ -438,8 +439,8 @@ function setup() {
 
             //allow saving shape as next piece is being spawn
             this.allow_shape_save = true
-        },
-        reset_game: function () {
+        }
+        tetris.board.reset_game= function () {
             this.matrix = [...Array(21)].map(e => Array(10).fill(EMPTY))
             //get a random shape for start
             this.shape = this.grab_bag_algo()
@@ -459,8 +460,8 @@ function setup() {
             tetris.timer.value = 0
             document.querySelector("#menu").style.display = "none"
 
-        },
-        draw: function () {
+        }
+        tetris.board.draw= function () {
             // stroke("#111");
             //background
             //rect(this.x, this.y, this.w, this.h, this.r)
@@ -542,7 +543,6 @@ function setup() {
             });
 
         }
-    },
 
 
 
@@ -584,10 +584,10 @@ function setup() {
     {
         x: tetris.board.x,
         y: tetris.board.y + tetris.board.get_cell_size()*(tetris.board.rows+1),
-        w: tetris.board.w,
+        w: tetris.board.get_cell_size()*tetris.board.cols,
         h: 10,
         value: 0,
-        limit: 4,
+        limit: 180,//in seconds
         draw: function () {
             if (tetris.game.mode == MODE_TIMED) {
                 fill("#222")
@@ -601,6 +601,8 @@ function setup() {
 
     }
 
+    //create canvas
+    //max width limit 594px
     createCanvas(windowWidth, windowHeight);
     console.log("canvasW,canvasH", windowWidth, windowHeight)
 
